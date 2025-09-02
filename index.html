@@ -118,7 +118,6 @@
             margin: 50px 0;
             color: var(--light-grey);
             text-shadow: 0 0 10px var(--neon-pink);
-            /* MODIFICATION: Set min-height to prevent layout shift */
             min-height: 1.5em; 
             display: flex;
             justify-content: center;
@@ -129,15 +128,66 @@
             animation: pulse 1.5s infinite;
         }
         
-        /* MODIFICATION: New animations for memory mode sequence */
-        @keyframes memory-pop-in {
-            from {
-                transform: translateY(30px) scale(0.8);
+        /* MODIFICATION: New, more satisfying animations for Classic Mode */
+        @keyframes classic-prompt-enter {
+            0% {
+                transform: scale(0.8) translateY(20px);
                 opacity: 0;
+                text-shadow: 0 0 30px var(--neon-blue);
             }
-            to {
+            60% {
+                transform: scale(1.1);
+                text-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--neon-blue);
+            }
+            100% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+                text-shadow: 0 0 10px var(--neon-pink);
+            }
+        }
+
+        .classic-prompt-enter-anim {
+            animation: classic-prompt-enter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        @keyframes correct-feedback {
+            0% {
+                transform: scale(1);
+                color: var(--neon-green);
+                text-shadow: 0 0 15px var(--neon-green);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                color: var(--light-grey);
+                text-shadow: 0 0 10px var(--neon-pink);
+            }
+        }
+
+        .correct-feedback-anim {
+            animation: correct-feedback 0.3s ease-out;
+        }
+
+        /* MODIFICATION: Enhanced animations for memory mode sequence */
+        @keyframes memory-pop-in {
+            0% {
+                transform: translateY(40px) scale(0.7);
+                opacity: 0;
+                text-shadow: 0 0 25px var(--neon-blue);
+            }
+            50% {
+                opacity: 1;
+            }
+            80% {
+                transform: translateY(-10px) scale(1.1);
+                text-shadow: 0 0 15px var(--neon-pink), 0 0 30px var(--neon-pink);
+            }
+            100% {
                 transform: translateY(0) scale(1);
                 opacity: 1;
+                text-shadow: 0 0 10px var(--neon-pink);
             }
         }
 
@@ -147,17 +197,19 @@
                 opacity: 1;
             }
             to {
-                transform: translateY(-30px) scale(0.8);
+                transform: translateY(-40px) scale(0.7);
                 opacity: 0;
             }
         }
         
         .memory-key-enter {
-            animation: memory-pop-in 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            /* Use a cubic-bezier that overshoots for a 'bouncy' effect */
+            animation: memory-pop-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
         .memory-key-exit {
-            animation: memory-pop-out 0.35s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+            /* Use a cubic-bezier for a quick exit */
+            animation: memory-pop-out 0.4s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards;
         }
 
         .game-input-field {
@@ -1156,22 +1208,32 @@
 
             const generateClassicPrompt = () => {
                 if (!classicGameActive) return;
-                clearTimeout(classicTimeout); // Clear previous timeout
+                clearTimeout(classicTimeout);
                 const keys = settings.customKeys.split(',').filter(k => k.length === 1);
                 if (keys.length === 0) { console.warn('No custom keys defined, cannot generate prompt.'); showGameOver('No custom keys defined in settings!', 'classic', classicStats); return; }
                 currentClassicPrompt = getRandomKey();
+                
                 if (classicPromptElement) {
                     classicPromptElement.textContent = '...';
+                    classicPromptElement.classList.remove('classic-prompt-enter-anim', 'correct-feedback-anim');
+
+                    /* MODIFICATION: Delay prompt appearance for animation */
                     setTimeout(() => {
                         if (!classicGameActive) return;
                         classicPromptElement.textContent = `Type: ${currentClassicPrompt.toUpperCase()}`;
+                        classicPromptElement.classList.add('classic-prompt-enter-anim');
                         classicStartTime = performance.now();
+
+                        classicPromptElement.addEventListener('animationend', () => {
+                            classicPromptElement.classList.remove('classic-prompt-enter-anim');
+                        }, { once: true });
+
                         classicTimeout = setTimeout(() => {
                             classicStats.misses++;
                             classicStats.streak = 0;
                             showGameOver(`You missed the prompt!`, 'classic', classicStats);
                         }, settings.difficulty);
-                    }, 75); // 75ms flicker delay
+                    }, 150); // Small delay for visual pacing
                 }
             };
 
@@ -1180,6 +1242,7 @@
                 if (!classicGameActive || !classicInputField || document.activeElement !== classicInputField) return;
                 const inputChar = event.key.toLowerCase();
                 if (inputChar === currentClassicPrompt) {
+                    clearTimeout(classicTimeout); // Clear timeout since it was a success
                     const reactionTime = performance.now() - classicStartTime;
                     classicStats.hits++;
                     classicStats.totalReactionTime += reactionTime;
@@ -1188,6 +1251,14 @@
                     if (classicStats.streak > maxStreak) {
                         maxStreak = classicStats.streak;
                     }
+                    
+                    /* MODIFICATION: Add correct answer feedback animation */
+                    if (classicPromptElement) {
+                        classicPromptElement.classList.remove('correct-feedback-anim');
+                        void classicPromptElement.offsetWidth; // Trigger reflow
+                        classicPromptElement.classList.add('correct-feedback-anim');
+                    }
+
                     updateStatsDisplay('classic');
                     generateClassicPrompt();
                 } else {
@@ -1381,7 +1452,7 @@
                 });
             };
             
-            // MODIFICATION: New smooth animation logic for memory sequence
+            /* MODIFICATION: The animation logic here remains the same as it correctly applies the CSS classes. The improvement comes from the CSS itself. */
             const generateMemorySequence = () => {
                 if (!memoryGameActive) return;
                 const promptElement = document.getElementById('memory-prompt');
@@ -1425,7 +1496,7 @@
                     // 3. Set a timeout for the next key in the sequence
                     setTimeout(() => {
                         displayKey(index + 1);
-                    }, 1100); // Total duration for one key cycle (700ms visible + 400ms animation/pause)
+                    }, 1100); // Total duration for one key cycle
                 };
 
                 // Start the sequence after a brief initial pause
