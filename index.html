@@ -84,7 +84,6 @@
             margin-top: 0;
         }
         
-        /* New styles for menu titles and username display */
         .main-menu-content h1,
         .main-menu-content p,
         .main-menu-content #username-display {
@@ -122,64 +121,48 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative; /* Needed for pseudo-elements */
         }
         
         .pulse-animation {
             animation: pulse 1.5s infinite;
         }
         
-        /* MODIFICATION: New, more satisfying animations for Classic Mode */
-        @keyframes classic-prompt-enter {
-            0% {
-                transform: scale(0.8) translateY(20px);
-                opacity: 0;
-                text-shadow: 0 0 30px var(--neon-blue);
-            }
-            60% {
-                transform: scale(1.1);
-                text-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--neon-blue);
-            }
-            100% {
-                transform: scale(1) translateY(0);
-                opacity: 1;
-                text-shadow: 0 0 10px var(--neon-pink);
-            }
+        /* */
+        @keyframes prompt-anticipation {
+            to { transform: scale(0.8); opacity: 0.5; }
+        }
+        
+        @keyframes prompt-impact {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
         }
 
-        .classic-prompt-enter-anim {
-            animation: classic-prompt-enter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        @keyframes prompt-success {
+            0% { text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green); color: var(--neon-green); transform: scale(1.1); }
+            100% { text-shadow: 0 0 10px var(--neon-pink); color: var(--light-grey); transform: scale(1); }
+        }
+        
+        .prompt-prepare {
+            animation: prompt-anticipation 0.1s forwards;
         }
 
-        @keyframes correct-feedback {
-            0% {
-                transform: scale(1);
-                color: var(--neon-green);
-                text-shadow: 0 0 15px var(--neon-green);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-                color: var(--light-grey);
-                text-shadow: 0 0 10px var(--neon-pink);
-            }
+        .prompt-show {
+            animation: prompt-impact 0.25s cubic-bezier(0.25, 0.46, 0.45, 1.5) forwards;
         }
 
-        .correct-feedback-anim {
-            animation: correct-feedback 0.3s ease-out;
+        .prompt-correct {
+            animation: prompt-success 0.3s ease-out;
         }
 
-        /* MODIFICATION: Enhanced animations for memory mode sequence */
         @keyframes memory-pop-in {
             0% {
                 transform: translateY(40px) scale(0.7);
                 opacity: 0;
                 text-shadow: 0 0 25px var(--neon-blue);
             }
-            50% {
-                opacity: 1;
-            }
+            50% { opacity: 1; }
             80% {
                 transform: translateY(-10px) scale(1.1);
                 text-shadow: 0 0 15px var(--neon-pink), 0 0 30px var(--neon-pink);
@@ -192,23 +175,15 @@
         }
 
         @keyframes memory-pop-out {
-            from {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
-            to {
-                transform: translateY(-40px) scale(0.7);
-                opacity: 0;
-            }
+            from { transform: translateY(0) scale(1); opacity: 1; }
+            to { transform: translateY(-40px) scale(0.7); opacity: 0; }
         }
         
         .memory-key-enter {
-            /* Use a cubic-bezier that overshoots for a 'bouncy' effect */
             animation: memory-pop-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
         .memory-key-exit {
-            /* Use a cubic-bezier for a quick exit */
             animation: memory-pop-out 0.4s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards;
         }
 
@@ -268,26 +243,10 @@
             color: var(--neon-green);
         }
 
-        .achievement-item .icon {
-            font-size: 2em;
-            margin-right: 15px;
-        }
-        
-        .achievement-item .icon.unlocked {
-            color: var(--neon-green);
-        }
-        
-        .achievement-item .details h4 {
-            margin: 0;
-            color: var(--light-grey);
-            text-shadow: none;
-        }
-        
-        .achievement-item .details p {
-            margin: 5px 0 0;
-            font-size: 0.9em;
-            color: rgba(255, 255, 255, 0.7);
-        }
+        .achievement-item .icon { font-size: 2em; margin-right: 15px; }
+        .achievement-item .icon.unlocked { color: var(--neon-green); }
+        .achievement-item .details h4 { margin: 0; color: var(--light-grey); text-shadow: none; }
+        .achievement-item .details p { margin: 5px 0 0; font-size: 0.9em; color: rgba(255, 255, 255, 0.7); }
 
         @keyframes pulse {
             0% { transform: scale(1); opacity: 1; }
@@ -302,19 +261,9 @@
             justify-content: space-around;
         }
         
-        .game-stats .stat-item {
-            text-align: center;
-        }
-
-        .game-stats .stat-item p {
-            font-size: 1em;
-            margin: 0;
-        }
-        
-        .game-stats .stat-item span {
-            font-size: 1.5em;
-            font-weight: bold;
-        }
+        .game-stats .stat-item { text-align: center; }
+        .game-stats .stat-item p { font-size: 1em; margin: 0; }
+        .game-stats .stat-item span { font-size: 1.5em; font-weight: bold; }
 
         .score-stat { color: var(--light-red); text-shadow: 0 0 5px var(--light-red); }
         .streak-stat { color: var(--neon-pink); text-shadow: 0 0 5px var(--neon-pink); }
@@ -333,7 +282,7 @@
             border: 2px solid var(--light-grey);
             cursor: pointer;
             border-radius: 50%;
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s; /* */
         }
         
         .color-box.selected {
@@ -411,7 +360,34 @@
         #classic-input-field { width: 80%; max-width: 400px; font-size: 2em; text-align: center; border: 2px solid var(--squid-green); }
         #circle-mode { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: linear-gradient(45deg, rgba(0, 0, 0, 0.8) 0%, rgba(47, 132, 124, 0.2) 100%); position: relative; }
         #circle-game-area { position: relative; width: 90vmin; height: 90vmin; max-width: 700px; max-height: 700px; border: 2px solid var(--neon-blue); border-radius: 10px; box-shadow: 0 0 20px var(--neon-blue); overflow: hidden; background-color: rgba(0, 0, 0, 0.5); }
-        .circle-target { position: absolute; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center; flex-direction: column; width: 150px; height: 150px; }
+        
+        /* */
+        .circle-target { 
+            position: absolute; 
+            transform: translate(-50%, -50%); 
+            display: flex; justify-content: center; 
+            align-items: center; 
+            flex-direction: column; 
+            width: 150px; 
+            height: 150px;
+            animation: target-spawn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .circle-target.hit { animation: target-hit 0.3s ease-out forwards; }
+        .circle-target.miss { animation: target-miss 0.3s ease-in forwards; }
+
+        @keyframes target-spawn {
+            from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        @keyframes target-hit {
+            from { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            to { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
+        }
+        @keyframes target-miss {
+            from { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            to { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+        }
+
         .outer-circle { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--neon-pink); transition: all linear; }
         .inner-circle { position: absolute; width: 60%; height: 60%; background-color: rgba(229, 9, 20, 0.5); border-radius: 50%; border: 2px solid var(--light-red); transition: background-color 0.2s, border-color 0.2s; }
         .key-button { position: absolute; background-color: var(--neon-pink); color: var(--light-grey); width: 50%; height: 50%; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2.5em; font-weight: bold; box-shadow: 0 0 10px var(--neon-pink); pointer-events: none; }
@@ -436,9 +412,9 @@
         .audio-controls audio { width: 200px; background: var(--dark-grey); border-radius: 5px; }
         .hero-image {
             max-width: 61%;
-            height: 78vh; /* Increased height - Adjust as needed */
+            height: 78vh;
             object-fit: contain;
-            align-self: center; /* Changed to center to lower it */
+            align-self: center;
             margin-right: -92px;
         }
         @media (max-width: 768px) {
@@ -577,7 +553,6 @@
         <ul id="achievements-list" class="achievements-list"></ul>
         <button id="achievements-back-btn"><i class="fas fa-arrow-left"></i> Back to Menu</button>
     </div>
-
 
     <div id="countdown" style="display: none;"></div>
 
@@ -727,14 +702,12 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('DOM loaded');
-
+            // Unchanged variables and setup...
+            // ...
             const screens = document.querySelectorAll('.screen');
             const countdownElement = document.getElementById('countdown');
             const backgroundMusic = document.getElementById('background-music');
 
-            // IMPORTANT: Create an 'audio' folder and place these files inside.
-            // You must download your own MP3s and rename them to match these names exactly.
             const tracks = [
                 { name: 'Squid Game Choir', src: 'audio/macabre-choir-inspired-by-squid-game-287425.mp3' },
                 { name: 'Piano Classical', src: 'audio/piano-classical-music-347514.mp3' },
@@ -854,7 +827,9 @@
             const classicInputField = document.getElementById('classic-input-field');
             const circleGameArea = document.getElementById('circle-game-area');
 
-            const playSound = (sound) => {
+            // Unchanged helper functions (playSound, tryPlayAudio, getRandomKey, etc.)...
+            // ...
+             const playSound = (sound) => {
                 if(sound) {
                     sound.currentTime = 0;
                     sound.play().catch(e => console.error("Sound playback error:", e));
@@ -1206,43 +1181,45 @@
                 });
             };
 
+            /* MODIFICATION: Rewritten Classic prompt logic for better animations */
             const generateClassicPrompt = () => {
                 if (!classicGameActive) return;
                 clearTimeout(classicTimeout);
                 const keys = settings.customKeys.split(',').filter(k => k.length === 1);
-                if (keys.length === 0) { console.warn('No custom keys defined, cannot generate prompt.'); showGameOver('No custom keys defined in settings!', 'classic', classicStats); return; }
+                if (keys.length === 0) { showGameOver('No custom keys defined!', 'classic', classicStats); return; }
+                
                 currentClassicPrompt = getRandomKey();
                 
                 if (classicPromptElement) {
-                    classicPromptElement.textContent = '...';
-                    classicPromptElement.classList.remove('classic-prompt-enter-anim', 'correct-feedback-anim');
-
-                    /* MODIFICATION: Delay prompt appearance for animation */
-                    setTimeout(() => {
-                        if (!classicGameActive) return;
+                    classicPromptElement.classList.remove('prompt-show', 'prompt-correct');
+                    classicPromptElement.classList.add('prompt-prepare');
+                    
+                    classicPromptElement.addEventListener('animationend', () => {
+                        classicPromptElement.classList.remove('prompt-prepare');
                         classicPromptElement.textContent = `Type: ${currentClassicPrompt.toUpperCase()}`;
-                        classicPromptElement.classList.add('classic-prompt-enter-anim');
+                        classicPromptElement.classList.add('prompt-show');
                         classicStartTime = performance.now();
-
-                        classicPromptElement.addEventListener('animationend', () => {
-                            classicPromptElement.classList.remove('classic-prompt-enter-anim');
-                        }, { once: true });
-
+                        
                         classicTimeout = setTimeout(() => {
+                            if (!classicGameActive) return;
                             classicStats.misses++;
                             classicStats.streak = 0;
-                            showGameOver(`You missed the prompt!`, 'classic', classicStats);
+                            showGameOver('You missed the prompt!', 'classic', classicStats);
                         }, settings.difficulty);
-                    }, 150); // Small delay for visual pacing
+
+                    }, { once: true });
                 }
             };
-
-
+            
+            /* MODIFICATION: Simplified Classic input to handle new animation classes */
             const handleClassicInput = (event) => {
                 if (!classicGameActive || !classicInputField || document.activeElement !== classicInputField) return;
                 const inputChar = event.key.toLowerCase();
+                
+                if (classicPromptElement.classList.contains('prompt-prepare')) return; // Ignore input during animation transition
+
                 if (inputChar === currentClassicPrompt) {
-                    clearTimeout(classicTimeout); // Clear timeout since it was a success
+                    clearTimeout(classicTimeout);
                     const reactionTime = performance.now() - classicStartTime;
                     classicStats.hits++;
                     classicStats.totalReactionTime += reactionTime;
@@ -1252,13 +1229,7 @@
                         maxStreak = classicStats.streak;
                     }
                     
-                    /* MODIFICATION: Add correct answer feedback animation */
-                    if (classicPromptElement) {
-                        classicPromptElement.classList.remove('correct-feedback-anim');
-                        void classicPromptElement.offsetWidth; // Trigger reflow
-                        classicPromptElement.classList.add('correct-feedback-anim');
-                    }
-
+                    classicPromptElement.classList.add('prompt-correct');
                     updateStatsDisplay('classic');
                     generateClassicPrompt();
                 } else {
@@ -1280,98 +1251,92 @@
                 });
             };
             
+            /* MODIFICATION: Updated to use new spawn and feedback animations */
             const spawnCircleTarget = () => {
-                if (!circleGameActive) return;
-                if (activeCircleTarget) return;
-                try {
-                    const targetKey = getRandomKey();
-                    const targetSize = 150;
-                    if (!circleGameArea) return;
-                    const areaWidth = circleGameArea.clientWidth;
-                    const areaHeight = circleGameArea.clientHeight;
-                    const x = Math.random() * (areaWidth - targetSize) + targetSize / 2;
-                    const y = Math.random() * (areaHeight - targetSize) + targetSize / 2;
-                    const targetDiv = document.createElement('div');
-                    targetDiv.className = 'circle-target';
-                    targetDiv.dataset.key = targetKey;
-                    targetDiv.dataset.startTime = performance.now();
-                    targetDiv.style.left = `${x}px`;
-                    targetDiv.style.top = `${y}px`;
-                    const outer = document.createElement('div');
-                    outer.className = 'outer-circle';
-                    outer.style.borderColor = colorMap[settings.uiColor] || 'var(--neon-pink)';
-                    const inner = document.createElement('div');
-                    inner.className = 'inner-circle';
-                    const button = document.createElement('div');
-                    button.className = 'key-button';
-                    button.textContent = targetKey.toUpperCase();
-                    targetDiv.appendChild(outer);
-                    targetDiv.appendChild(inner);
-                    targetDiv.appendChild(button);
-                    circleGameArea.appendChild(targetDiv);
-                    activeCircleTarget = targetDiv;
-                    const duration = settings.difficulty;
-                    outer.style.transition = `transform ${duration}ms linear, border-color ${duration}ms linear`;
-                    setTimeout(() => {
-                        outer.style.transform = 'scale(0.5)';
-                        outer.style.borderColor = 'var(--dark-red)';
-                    }, 10);
-                    clearTimeout(circleTimeoutTimer);
-                    circleTimeoutTimer = setTimeout(() => {
-                        if (activeCircleTarget === targetDiv) {
-                            circleStats.misses++;
-                            circleStats.streak = 0;
-                            showGameOver('You missed a circle!', 'circle', circleStats);
-                        }
-                    }, settings.difficulty + 50);
-                } catch (e) {
-                    console.error('Error in spawnCircleTarget:', e);
-                }
+                if (!circleGameActive || activeCircleTarget) return;
+                
+                const targetKey = getRandomKey();
+                const targetSize = 150;
+                if (!circleGameArea) return;
+
+                const areaWidth = circleGameArea.clientWidth;
+                const areaHeight = circleGameArea.clientHeight;
+                const x = Math.random() * (areaWidth - targetSize) + targetSize / 2;
+                const y = Math.random() * (areaHeight - targetSize) + targetSize / 2;
+
+                const targetDiv = document.createElement('div');
+                targetDiv.className = 'circle-target';
+                targetDiv.dataset.key = targetKey;
+                targetDiv.dataset.startTime = performance.now();
+                targetDiv.style.left = `${x}px`;
+                targetDiv.style.top = `${y}px`;
+
+                targetDiv.innerHTML = `
+                    <div class="outer-circle"></div>
+                    <div class="inner-circle"></div>
+                    <div class="key-button">${targetKey.toUpperCase()}</div>
+                `;
+                
+                circleGameArea.appendChild(targetDiv);
+                activeCircleTarget = targetDiv;
+
+                const outer = targetDiv.querySelector('.outer-circle');
+                const duration = settings.difficulty;
+                outer.style.transition = `transform ${duration}ms linear`;
+                setTimeout(() => outer.style.transform = 'scale(0.5)', 10);
+
+                clearTimeout(circleTimeoutTimer);
+                circleTimeoutTimer = setTimeout(() => {
+                    if (activeCircleTarget === targetDiv) {
+                        activeCircleTarget.classList.add('miss');
+                        activeCircleTarget.addEventListener('animationend', () => {
+                            if (circleGameActive) {
+                                circleStats.misses++;
+                                circleStats.streak = 0;
+                                showGameOver('You missed a circle!', 'circle', circleStats);
+                            }
+                        }, { once: true });
+                    }
+                }, settings.difficulty + 50);
             };
 
             const handleCircleInput = (event) => {
                 if (!circleGameActive || !activeCircleTarget) return;
                 const inputChar = event.key.toLowerCase();
                 const targetKey = activeCircleTarget.dataset.key;
+                
                 if (inputChar === targetKey) {
                     playSound(soundEffects.circleHit);
                     const reactionTime = performance.now() - parseFloat(activeCircleTarget.dataset.startTime);
+                    
                     const outer = activeCircleTarget.querySelector('.outer-circle');
                     const inner = activeCircleTarget.querySelector('.inner-circle');
-                    const outerRect = outer.getBoundingClientRect();
-                    const innerRect = inner.getBoundingClientRect();
-                    let points = outerRect.width <= innerRect.width + 10 ? 200 : 100;
-                    if (points === 200) {
-                        inner.style.backgroundColor = 'rgba(0, 255, 0, 0.5)';
-                        inner.style.borderColor = 'var(--neon-green)';
-                    }
-                    const hitEffect = document.createElement('div');
-                    hitEffect.className = 'hit-effect';
-                    const effectSize = inner.offsetWidth * 2;
-                    hitEffect.style.width = `${effectSize}px`;
-                    hitEffect.style.height = `${effectSize}px`;
-                    hitEffect.style.left = `${activeCircleTarget.offsetLeft - (effectSize / 2 - activeCircleTarget.offsetWidth / 2)}px`;
-                    hitEffect.style.top = `${activeCircleTarget.offsetTop - (effectSize / 2 - activeCircleTarget.offsetHeight / 2)}px`;
-                    circleGameArea.appendChild(hitEffect);
-                    hitEffect.addEventListener('animationend', () => hitEffect.remove());
+                    let points = (outer.getBoundingClientRect().width <= inner.getBoundingClientRect().width + 10) ? 200 : 100;
+                    
                     circleStats.hits++;
                     circleStats.totalReactionTime += reactionTime;
                     circleStats.score += points;
                     circleStats.streak++;
-                    if (circleStats.streak > maxStreak) {
-                        maxStreak = circleStats.streak;
-                    }
+                    if (circleStats.streak > maxStreak) maxStreak = circleStats.streak;
+                    
                     updateStatsDisplay('circle');
-                    activeCircleTarget.remove();
+                    
+                    activeCircleTarget.classList.add('hit');
+                    activeCircleTarget.addEventListener('animationend', () => activeCircleTarget.remove());
+                    
                     activeCircleTarget = null;
-                    setTimeout(spawnCircleTarget, settings.spawnGap);
+                    clearTimeout(circleTimeoutTimer);
+                    setTimeout(spawnCircleTarget, settings.spawnGap / 2); // Spawn next one a bit faster
+
                 } else {
                     circleStats.wrongInputs++;
                     circleStats.streak = 0;
                     showGameOver(`Wrong key! You typed '${inputChar}'`, 'circle', circleStats);
                 }
             };
-
+            
+            // Unchanged game modes (Marathon, Memory, Sound)...
+            // ...
             const startMarathonGame = () => {
                 resetGame('marathon');
                 startCountdown(() => {
@@ -1452,7 +1417,6 @@
                 });
             };
             
-            /* MODIFICATION: The animation logic here remains the same as it correctly applies the CSS classes. The improvement comes from the CSS itself. */
             const generateMemorySequence = () => {
                 if (!memoryGameActive) return;
                 const promptElement = document.getElementById('memory-prompt');
@@ -1474,32 +1438,26 @@
                 
                 const displayKey = (index) => {
                     if (index >= memorySequence.length) {
-                        // Sequence finished, enable input
                         setTimeout(() => {
-                            promptElement.className = 'game-prompt'; // Clear animation classes
+                            promptElement.className = 'game-prompt';
                             promptElement.textContent = '...';
                             inputField.disabled = false;
                             inputField.focus();
-                        }, 400); // Wait for the last exit animation to complete
+                        }, 400);
                         return;
                     }
 
-                    // 1. Set text and trigger pop-in animation
                     promptElement.textContent = memorySequence[index].toUpperCase();
                     promptElement.className = 'game-prompt memory-key-enter';
 
-                    // 2. After a delay, trigger the pop-out animation
                     setTimeout(() => {
                         promptElement.className = 'game-prompt memory-key-exit';
-                    }, 700); // How long the key remains visible on screen
+                    }, 700);
 
-                    // 3. Set a timeout for the next key in the sequence
                     setTimeout(() => {
                         displayKey(index + 1);
-                    }, 1100); // Total duration for one key cycle
+                    }, 1100);
                 };
-
-                // Start the sequence after a brief initial pause
                 setTimeout(() => displayKey(0), 500);
             };
 
@@ -1547,7 +1505,6 @@
                 const keys = settings.customKeys.split(',').filter(k => k.length === 1);
                 if (keys.length === 0) { console.warn('No custom keys defined.'); showGameOver('No custom keys defined!', 'sound', soundStats); return; }
                 currentSoundPrompt = getRandomKey();
-                // IMPORTANT: Sound mode requires files named like 'sound-effect-a.mp3', 'sound-effect-s.mp3', etc.
                 const soundPath = `audio/sound-effect-${currentSoundPrompt}.mp3`;
                 const sound = new Audio(soundPath);
                 sound.play().catch(e => {
@@ -1641,7 +1598,8 @@
                 }
             };
 
-            // Main Menu Buttons
+            // Unchanged button event listeners and initialization...
+            // ...
             const menuButtons = document.querySelectorAll('#main-menu button, #game-modes-screen button');
             menuButtons.forEach(button => {
                 button.addEventListener('click', () => {
@@ -1716,19 +1674,23 @@
                 settings.spawnGap = parseInt(document.getElementById('spawn-gap')?.value, 10);
                 settings.customKeys = document.getElementById('custom-keys')?.value.toLowerCase().replace(/[^a-z,]/g, '').split(',').filter(k => k.length === 1).join(',');
 
-                // Save the updated settings object
                 saveSettings();
-
-                // Re-apply settings and navigate back
                 showScreen('main-menu');
             });
 
             document.getElementById('settings-back-btn')?.addEventListener('click', () => { showScreen('main-menu'); });
 
-            document.querySelectorAll('.player-color-picker .color-box').forEach(box => {
+            /* MODIFICATION: Fixed the UI color picker logic to be more robust */
+            const colorBoxes = document.querySelectorAll('.player-color-picker .color-box');
+            colorBoxes.forEach(box => {
                 box.addEventListener('click', () => {
-                    document.querySelectorAll('.player-color-picker .color-box').forEach(b => b.classList.remove('selected'));
+                    // First, remove 'selected' class from all boxes
+                    colorBoxes.forEach(b => b.classList.remove('selected'));
+                    
+                    // Then, add it only to the clicked box
                     box.classList.add('selected');
+                    
+                    // Update settings and apply the color change
                     settings.uiColor = box.dataset.color;
                     document.documentElement.style.setProperty('--neon-pink', colorMap[settings.uiColor]);
                     document.documentElement.style.setProperty('--light-red', colorMap[settings.uiColor]);
@@ -1746,7 +1708,7 @@
                 }
             });
 
-            document.getElementById('change-user-btn')?.addEventListener('click', () => { 
+             document.getElementById('change-user-btn')?.addEventListener('click', () => { 
                 const usernameModal = document.getElementById('username-modal');
                 if (usernameModal) usernameModal.style.display = 'flex';
                 const usernameInput = document.getElementById('username-input');
@@ -1894,7 +1856,6 @@
             document.documentElement.style.setProperty('--light-red', colorMap[settings.uiColor]);
 
             updateMusicSources();
-
             showScreen('main-menu');
             updateDisplayUsername();
         });
