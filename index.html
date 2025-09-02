@@ -118,7 +118,46 @@
             margin: 50px 0;
             color: var(--light-grey);
             text-shadow: 0 0 10px var(--neon-pink);
+            /* MODIFICATION: Set min-height to prevent layout shift */
+            min-height: 1.5em; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .pulse-animation {
             animation: pulse 1.5s infinite;
+        }
+        
+        /* MODIFICATION: New animations for memory mode sequence */
+        @keyframes memory-pop-in {
+            from {
+                transform: translateY(30px) scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes memory-pop-out {
+            from {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-30px) scale(0.8);
+                opacity: 0;
+            }
+        }
+        
+        .memory-key-enter {
+            animation: memory-pop-in 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .memory-key-exit {
+            animation: memory-pop-out 0.35s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
         }
 
         .game-input-field {
@@ -316,7 +355,7 @@
 
         .game-screen { display: none; width: 100%; height: 100%; position: relative; z-index: 5; }
         #classic-mode { text-align: center; }
-        #classic-prompt { font-size: 3em; margin: 50px 0; color: var(--light-grey); text-shadow: 0 0 10px var(--neon-pink); animation: pulse 1.5s infinite; }
+        #classic-prompt { font-size: 3em; margin: 50px 0; color: var(--light-grey); text-shadow: 0 0 10px var(--neon-pink); }
         #classic-input-field { width: 80%; max-width: 400px; font-size: 2em; text-align: center; border: 2px solid var(--squid-green); }
         #circle-mode { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: linear-gradient(45deg, rgba(0, 0, 0, 0.8) 0%, rgba(47, 132, 124, 0.2) 100%); position: relative; }
         #circle-game-area { position: relative; width: 90vmin; height: 90vmin; max-width: 700px; max-height: 700px; border: 2px solid var(--neon-blue); border-radius: 10px; box-shadow: 0 0 20px var(--neon-blue); overflow: hidden; background-color: rgba(0, 0, 0, 0.5); }
@@ -428,7 +467,7 @@
             <div class="stat-item"><p>Streak</p><span id="classic-streak" class="streak-stat">0</span></div>
             <div class="stat-item"><p>Accuracy</p><span id="classic-accuracy" class="accuracy-stat">100%</span></div>
         </div>
-        <h1 id="classic-prompt" class="game-prompt">Press Enter to Start</h1>
+        <h1 id="classic-prompt" class="game-prompt pulse-animation">Press Enter to Start</h1>
         <input type="text" id="classic-input-field" class="game-input-field" placeholder="Type here" autocomplete="off" disabled>
         <button id="classic-back-btn"><i class="fas fa-arrow-left"></i> Back to Menu</button>
     </div>
@@ -451,7 +490,7 @@
             <div class="stat-item"><p>Time</p><span id="marathon-time" class="streak-stat">0s</span></div>
             <div class="stat-item"><p>Difficulty</p><span id="marathon-difficulty" class="accuracy-stat">100%</span></div>
         </div>
-        <h1 id="marathon-prompt" class="game-prompt">Press Enter to Start</h1>
+        <h1 id="marathon-prompt" class="game-prompt pulse-animation">Press Enter to Start</h1>
         <input type="text" id="marathon-input-field" class="game-input-field" placeholder="Type here" autocomplete="off" disabled>
         <button id="marathon-back-btn"><i class="fas fa-arrow-left"></i> Back to Menu</button>
     </div>
@@ -463,7 +502,7 @@
             <div class="stat-item"><p>Round</p><span id="memory-round" class="streak-stat">0</span></div>
             <div class="stat-item"><p>Mistakes</p><span id="memory-mistakes" class="accuracy-stat">0</span></div>
         </div>
-        <h1 id="memory-prompt" class="game-prompt">Press Enter to Start</h1>
+        <h1 id="memory-prompt" class="game-prompt pulse-animation">Press Enter to Start</h1>
         <input type="text" id="memory-input-field" class="game-input-field" placeholder="Type key sequence" autocomplete="off" disabled>
         <button id="memory-back-btn"><i class="fas fa-arrow-left"></i> Back to Menu</button>
     </div>
@@ -475,7 +514,7 @@
             <div class="stat-item"><p>Streak</p><span id="sound-streak" class="streak-stat">0</span></div>
             <div class="stat-item"><p>Accuracy</p><span id="sound-accuracy" class="accuracy-stat">100%</span></div>
         </div>
-        <h1 id="sound-prompt" class="game-prompt">Press Enter to Start</h1>
+        <h1 id="sound-prompt" class="game-prompt pulse-animation">Press Enter to Start</h1>
         <button id="sound-play-btn"><i class="fas fa-play"></i> Play Sound</button>
         <input type="text" id="sound-input-field" class="game-input-field" placeholder="Type key corresponding to sound" autocomplete="off" disabled>
         <button id="sound-back-btn"><i class="fas fa-arrow-left"></i> Back to Menu</button>
@@ -605,7 +644,7 @@
             <h3>Export Leaderboard Data</h3>
             <p>Copy the JSON below to save your data.</p>
             <textarea id="export-textarea" rows="10" readonly style="width: 100%; border-radius: 8px; background-color: #1a1a1a; color: white; border: 1px solid var(--squid-green);"></textarea>
-            <button onclick="copyToClipboard('export-textarea')"><i class="fas fa-copy"></i> Copy to Clipboard</button>
+            <button id="copy-export-btn"><i class="fas fa-copy"></i> Copy to Clipboard</button>
         </div>
     </div>
 
@@ -634,46 +673,6 @@
         <p><span class="author">Made By Arjun E</span> | &copy; 2024 Squid QTE Trainer. Inspired by the Roblox 'Ink Game'.</p>
     </div>
 
-    <script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-            return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                    row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                    headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-    </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             console.log('DOM loaded');
@@ -682,6 +681,8 @@
             const countdownElement = document.getElementById('countdown');
             const backgroundMusic = document.getElementById('background-music');
 
+            // IMPORTANT: Create an 'audio' folder and place these files inside.
+            // You must download your own MP3s and rename them to match these names exactly.
             const tracks = [
                 { name: 'Squid Game Choir', src: 'audio/macabre-choir-inspired-by-squid-game-287425.mp3' },
                 { name: 'Piano Classical', src: 'audio/piano-classical-music-347514.mp3' },
@@ -735,7 +736,7 @@
                 blue: '#00d4ff'
             };
 
-            let currentUser = 'Player1';
+            let currentUser = localStorage.getItem('qte_currentUser') || 'Player1';
             let currentGameMode = '';
             let classicGameActive = false;
             let circleGameActive = false;
@@ -993,6 +994,7 @@
 
             const saveUsers = () => {
                 localStorage.setItem('qte_users', JSON.stringify(users));
+                localStorage.setItem('qte_currentUser', currentUser);
             };
 
             const saveSettings = () => {
@@ -1103,15 +1105,25 @@
             
             const resetGame = (mode) => {
                 let stats = {};
+                let promptElementId = '';
                 switch(mode) {
-                    case 'classic': classicGameActive = false; clearTimeout(classicTimeout); stats = classicStats; break;
+                    case 'classic': classicGameActive = false; clearTimeout(classicTimeout); stats = classicStats; promptElementId = 'classic-prompt'; break;
                     case 'circle': circleGameActive = false; clearTimeout(circleTimeoutTimer); if (activeCircleTarget) activeCircleTarget.remove(); activeCircleTarget = null; stats = circleStats; break;
-                    case 'marathon': clearInterval(marathonInterval); clearTimeout(marathonTimeout); marathonGameActive = false; stats = marathonStats; break;
-                    case 'memory': clearTimeout(memoryTimeout); memoryGameActive = false; stats = memoryStats; break;
-                    case 'sound': clearTimeout(soundTimeout); soundGameActive = false; stats = soundStats; break;
+                    case 'marathon': clearInterval(marathonInterval); clearTimeout(marathonTimeout); marathonGameActive = false; stats = marathonStats; promptElementId = 'marathon-prompt'; break;
+                    case 'memory': clearTimeout(memoryTimeout); memoryGameActive = false; stats = memoryStats; promptElementId = 'memory-prompt'; break;
+                    case 'sound': clearTimeout(soundTimeout); soundGameActive = false; stats = soundStats; promptElementId = 'sound-prompt'; break;
                 }
                 
                 Object.keys(stats).forEach(key => stats[key] = 0);
+
+                if (promptElementId) {
+                    const promptElement = document.getElementById(promptElementId);
+                    if (promptElement) {
+                        promptElement.className = 'game-prompt pulse-animation';
+                        promptElement.textContent = 'Press Enter to Start';
+                    }
+                }
+
                 if (mode === 'circle' && document.getElementById('circle-game-area')) {
                     document.getElementById('circle-game-area').innerHTML = '';
                 }
@@ -1136,7 +1148,7 @@
                     }
                     if (classicPromptElement) {
                         classicPromptElement.textContent = '...';
-                        classicPromptElement.style.animation = 'none';
+                        classicPromptElement.classList.remove('pulse-animation');
                     }
                     generateClassicPrompt();
                 });
@@ -1144,18 +1156,25 @@
 
             const generateClassicPrompt = () => {
                 if (!classicGameActive) return;
+                clearTimeout(classicTimeout); // Clear previous timeout
                 const keys = settings.customKeys.split(',').filter(k => k.length === 1);
                 if (keys.length === 0) { console.warn('No custom keys defined, cannot generate prompt.'); showGameOver('No custom keys defined in settings!', 'classic', classicStats); return; }
                 currentClassicPrompt = getRandomKey();
-                if (classicPromptElement) classicPromptElement.textContent = `Type: ${currentClassicPrompt.toUpperCase()}`;
-                classicStartTime = performance.now();
-                clearTimeout(classicTimeout);
-                classicTimeout = setTimeout(() => {
-                    classicStats.misses++;
-                    classicStats.streak = 0;
-                    showGameOver(`You missed the prompt!`, 'classic', classicStats);
-                }, settings.difficulty);
+                if (classicPromptElement) {
+                    classicPromptElement.textContent = '...';
+                    setTimeout(() => {
+                        if (!classicGameActive) return;
+                        classicPromptElement.textContent = `Type: ${currentClassicPrompt.toUpperCase()}`;
+                        classicStartTime = performance.now();
+                        classicTimeout = setTimeout(() => {
+                            classicStats.misses++;
+                            classicStats.streak = 0;
+                            showGameOver(`You missed the prompt!`, 'classic', classicStats);
+                        }, settings.difficulty);
+                    }, 75); // 75ms flicker delay
+                }
             };
+
 
             const handleClassicInput = (event) => {
                 if (!classicGameActive || !classicInputField || document.activeElement !== classicInputField) return;
@@ -1290,7 +1309,7 @@
                     marathonStats = { score: 0, time: 0, hits: 0, misses: 0, totalReactionTime: 0 };
                     marathonDifficulty = 500;
                     const marathonPromptElement = document.getElementById('marathon-prompt');
-                    if (marathonPromptElement) marathonPromptElement.style.animation = 'none';
+                    if (marathonPromptElement) marathonPromptElement.classList.remove('pulse-animation');
                     const marathonInputField = document.getElementById('marathon-input-field');
                     if (marathonInputField) {
                         marathonInputField.disabled = false;
@@ -1356,38 +1375,63 @@
                     memoryGameActive = true;
                     memoryStats = { score: 0, round: 1, mistakes: 0, inputHistory: [] };
                     const memoryPromptElement = document.getElementById('memory-prompt');
-                    if (memoryPromptElement) memoryPromptElement.style.animation = 'none';
+                    if (memoryPromptElement) memoryPromptElement.classList.remove('pulse-animation');
                     updateStatsDisplay('memory');
                     generateMemorySequence();
                 });
             };
             
+            // MODIFICATION: New smooth animation logic for memory sequence
             const generateMemorySequence = () => {
                 if (!memoryGameActive) return;
                 const promptElement = document.getElementById('memory-prompt');
                 const inputField = document.getElementById('memory-input-field');
                 if (!promptElement || !inputField) return;
+
                 inputField.disabled = true;
+                promptElement.textContent = '';
                 memoryInput = [];
+
                 const sequenceLength = memoryStats.round;
                 const keys = settings.customKeys.split(',').filter(k => k.length === 1);
+                if (keys.length === 0) {
+                    console.warn('No custom keys for memory mode.');
+                    showGameOver('No custom keys defined!', 'memory', memoryStats);
+                    return;
+                }
                 memorySequence = Array.from({length: sequenceLength}, () => keys[Math.floor(Math.random() * keys.length)]);
                 
-                let i = 0;
-                const displayInterval = setInterval(() => {
-                    if (i < memorySequence.length) {
-                        promptElement.textContent = memorySequence[i].toUpperCase();
-                        i++;
-                    } else {
-                        clearInterval(displayInterval);
+                const displayKey = (index) => {
+                    if (index >= memorySequence.length) {
+                        // Sequence finished, enable input
                         setTimeout(() => {
+                            promptElement.className = 'game-prompt'; // Clear animation classes
                             promptElement.textContent = '...';
                             inputField.disabled = false;
                             inputField.focus();
-                        }, 1000);
+                        }, 400); // Wait for the last exit animation to complete
+                        return;
                     }
-                }, 750);
+
+                    // 1. Set text and trigger pop-in animation
+                    promptElement.textContent = memorySequence[index].toUpperCase();
+                    promptElement.className = 'game-prompt memory-key-enter';
+
+                    // 2. After a delay, trigger the pop-out animation
+                    setTimeout(() => {
+                        promptElement.className = 'game-prompt memory-key-exit';
+                    }, 700); // How long the key remains visible on screen
+
+                    // 3. Set a timeout for the next key in the sequence
+                    setTimeout(() => {
+                        displayKey(index + 1);
+                    }, 1100); // Total duration for one key cycle (700ms visible + 400ms animation/pause)
+                };
+
+                // Start the sequence after a brief initial pause
+                setTimeout(() => displayKey(0), 500);
             };
+
 
             const handleMemoryInput = (event) => {
                 const memoryInputField = document.getElementById('memory-input-field');
@@ -1432,9 +1476,12 @@
                 const keys = settings.customKeys.split(',').filter(k => k.length === 1);
                 if (keys.length === 0) { console.warn('No custom keys defined.'); showGameOver('No custom keys defined!', 'sound', soundStats); return; }
                 currentSoundPrompt = getRandomKey();
+                // IMPORTANT: Sound mode requires files named like 'sound-effect-a.mp3', 'sound-effect-s.mp3', etc.
                 const soundPath = `audio/sound-effect-${currentSoundPrompt}.mp3`;
                 const sound = new Audio(soundPath);
-                sound.play();
+                sound.play().catch(e => {
+                    console.error(`Could not play sound for key '${currentSoundPrompt}'. Make sure the file exists at: ${soundPath}`);
+                });
                 soundTimeout = setTimeout(() => {
                     soundStats.misses++;
                     soundStats.streak = 0;
@@ -1747,13 +1794,18 @@
                 } catch (e) { alert("Error importing data. Please check the JSON format."); }
             });
 
-            function copyToClipboard(elementId) {
-                const textarea = document.getElementById(elementId);
+            document.getElementById('copy-export-btn')?.addEventListener('click', () => {
+                const textarea = document.getElementById('export-textarea');
                 if (!textarea) return;
                 textarea.select();
-                document.execCommand('copy');
-                alert("Copied to clipboard!");
-            }
+                textarea.setSelectionRange(0, 99999); // For mobile devices
+                navigator.clipboard.writeText(textarea.value).then(() => {
+                    alert("Copied to clipboard!");
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+            });
+
 
             const storedChallenge = localStorage.getItem('dailyChallenge');
             if (storedChallenge) {
@@ -1778,5 +1830,3 @@
     </script>
 </body>
 </html>
-
-
